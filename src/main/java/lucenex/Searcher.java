@@ -23,31 +23,37 @@ public class Searcher {
             IndexReader reader = DirectoryReader.open(directory);
             IndexSearcher searcher = new IndexSearcher(reader);
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            while(true) {
-                System.out.print("Inserisci una query semplice, ovvero una parola che vorresti cercare nei documenti, oppure exit per uscire: ");
+            while (true) {
+                System.out.print("Inserisci una query semplice o una serie di parole chiave separate da spazi, oppure 'exit' per uscire: ");
                 String userInput = br.readLine();
-                if(userInput.equalsIgnoreCase("exit")){
+                if (userInput.equalsIgnoreCase("exit")) {
                     break;
                 }
-                Query[] queries_user = {
-                        new TermQuery(new Term("titolo", userInput)),
-                        new TermQuery(new Term("contenuto", userInput))
-                };
 
-                for (int i = 0; i < queries_user.length; i++) {
-                    Query currentQuery = queries_user[i];
-                    System.out.println("Esecuzione di query " + i + ": " + currentQuery.toString());
+                // Split della stringa dell'utente in parole chiave
+                String[] keywords = userInput.split(" ");
 
-                    // Esegui la query
-                    TopDocs hits = searcher.search(currentQuery, 3);
-                    if(hits.scoreDocs.length == 0){
-                        System.out.println("Nessun documento trovato");
-                    }
-                    for (int j = 0; j < hits.scoreDocs.length; j++) {
-                        ScoreDoc scoreDoc = hits.scoreDocs[j];
-                        Document doc = searcher.doc(scoreDoc.doc);
-                        System.out.println("doc" + scoreDoc.doc + ":" + doc.get("titolo") + " (" + scoreDoc.score + ")");
-                    }
+                // Creazione di una query booleana per cercare tutte le parole chiave nei campi desiderati
+                BooleanQuery.Builder booleanQueryBuilder = new BooleanQuery.Builder();
+                for (String keyword : keywords) {
+                    Query termQueryTitolo = new TermQuery(new Term("titolo", keyword));
+                    Query termQueryContenuto = new TermQuery(new Term("contenuto", keyword));
+                    booleanQueryBuilder.add(termQueryTitolo, BooleanClause.Occur.SHOULD); // "SHOULD" indica l'OR logico
+                    booleanQueryBuilder.add(termQueryContenuto, BooleanClause.Occur.SHOULD);
+                }
+                Query userQuery = booleanQueryBuilder.build();
+
+                System.out.println("Esecuzione di query: " + userQuery.toString());
+
+                // Esegui la query
+                TopDocs hits = searcher.search(userQuery, 3);
+                if (hits.scoreDocs.length == 0) {
+                    System.out.println("Nessun documento trovato");
+                }
+                for (int j = 0; j < hits.scoreDocs.length; j++) {
+                    ScoreDoc scoreDoc = hits.scoreDocs[j];
+                    Document doc = searcher.doc(scoreDoc.doc);
+                    System.out.println("doc" + scoreDoc.doc + ":" + doc.get("titolo") + " (" + scoreDoc.score + ")");
                 }
             }
 

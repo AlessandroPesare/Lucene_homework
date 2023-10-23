@@ -41,12 +41,14 @@ public class TextIndexer {
 
             // Indicizza i file .txt nella directory specificata
             System.out.println("Inizio lettura da file");
+            long startTime = System.currentTimeMillis();
             indexTextFiles(writer, Paths.get(docsPath));
-
-            // Chiudi l'indice
             writer.close();
+            long endTime = System.currentTimeMillis();
+            long time = endTime - startTime;
 
             System.out.println("Indicizzazione completata con successo. L'indice è stato salvato in " + indexPath);
+            System.out.println("Il tempo trascorso per l'indicizzazione dei file è:"+ time + "millisecondi");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,6 +62,7 @@ public class TextIndexer {
             // vedo solo i file.txt nella cartella specificata dal path
             File[] files = dir.toFile().listFiles((pathname) -> pathname.getName().endsWith(".txt"));
             if (files != null) {
+
                 for (File file : files) {
                     System.out.println(file.getName());
                     // Crea un nuovo documento
@@ -78,6 +81,7 @@ public class TextIndexer {
                 }
                 writer.commit();
             }
+
         }
     }
 
