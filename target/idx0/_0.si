@@ -1,0 +1,28 @@
+    version 9.8.0
+    min version 9.8.0
+    number of documents 2
+    uses compound file true
+    diagnostics 8
+      key lucene.version
+      value 9.8.0
+      key os.version
+      value 14.0
+      key os.arch
+      value aarch64
+      key os
+      value Mac OS X
+      key java.vendor
+      value Oracle Corporation
+      key java.runtime.version
+      value 17.0.5+9-LTS-191
+      key timestamp
+      value 1697874519056
+      key source
+      value flush
+    attributes 0
+    files 2
+      file _0.si
+      file _0.scf
+    id ·ËÌÐ.ÐlÝÿ.¸Œy¹I¾
+    sort 0
+checksum 00000000002953891250
