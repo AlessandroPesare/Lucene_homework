@@ -40,7 +40,9 @@ public class Searcher {
 
                     // Esegui la query
                     TopDocs hits = searcher.search(currentQuery, 3);
-
+                    if(hits.scoreDocs.length == 0){
+                        System.out.println("Nessun documento trovato");
+                    }
                     for (int j = 0; j < hits.scoreDocs.length; j++) {
                         ScoreDoc scoreDoc = hits.scoreDocs[j];
                         Document doc = searcher.doc(scoreDoc.doc);
